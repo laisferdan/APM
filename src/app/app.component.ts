@@ -8,7 +8,7 @@ import { ProductListComponent } from "./pages/product-list/product-list.componen
     standalone: true,
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    imports: [CommonModule, RouterOutlet]
+    imports: [CommonModule, RouterOutlet, ProductListComponent]
 })
 export class AppComponent {
   pageTitle: string = 'Application Product Management';
