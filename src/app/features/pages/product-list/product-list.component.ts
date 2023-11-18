@@ -1,11 +1,13 @@
+import { FormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { IProduct } from '../../../core/models/product.interface';
+import { SharedModule } from '../../../shared/shared.module';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SharedModule],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
@@ -15,7 +17,7 @@ export class ProductListComponent {
   public imageMargin: number = 2;
   public showImage: boolean = false;
   public listFilter: string = 'cart';
-  public products: any[] = [
+  public products: IProduct[] = [
     {
       "productId": 2,
       "productName": "Garden Cart",
