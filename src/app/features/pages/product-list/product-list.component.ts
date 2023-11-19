@@ -1,7 +1,7 @@
+import { IProduct } from './../../../core/models/product.interface';
 import { FormsModule } from '@angular/forms';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IProduct } from '../../../core/models/product.interface';
 import { SharedModule } from '../../../shared/shared.module';
 
 @Component({
@@ -11,12 +11,22 @@ import { SharedModule } from '../../../shared/shared.module';
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnInit {
   public pageTitle: string = 'Product List';
   public imageWidth: number = 50;
   public imageMargin: number = 2;
   public showImage: boolean = false;
-  public listFilter: string = 'cart';
+
+  private _listFilter = '';
+  public get listFilter(): string {
+    return this._listFilter;
+  }
+  public set listFilter(value: string) {
+    this._listFilter = value;
+    this.filteredProducts = this.performFilter(value);
+  }
+
+  public filteredProducts: IProduct[] = [];
   public products: IProduct[] = [
     {
       "productId": 2,
@@ -39,6 +49,19 @@ export class ProductListComponent {
       "imageUrl": "assets/images/hammer.png"
     }
   ];
+
+  ngOnInit(): void {
+    console.log('');
+  }
+
+  public onRatingClick(message: string): void {
+    this.pageTitle = 'Product list: ' + message;
+  }
+
+  public performFilter(filterBy: string): IProduct[] {
+    filterBy = filterBy.toLocaleLowerCase();
+    return this.products.filter((product: IProduct) => product.productName.toLocaleLowerCase().includes(filterBy));
+  }
 
   public toggleImage(): void {
     this.showImage = !this.showImage;
