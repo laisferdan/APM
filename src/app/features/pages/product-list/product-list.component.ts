@@ -1,9 +1,10 @@
 import { IProduct } from './../../../core/models/product.interface';
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../../shared/shared.module';
 import { ProductService } from '../../../shared/services/product.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
@@ -12,11 +13,13 @@ import { ProductService } from '../../../shared/services/product.service';
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, OnDestroy {
   public pageTitle: string = 'Product List';
   public imageWidth: number = 50;
   public imageMargin: number = 2;
   public showImage: boolean = false;
+  public errorMessage: string = '';
+  public sub!: Subscription;
 
   private _listFilter = '';
   public get listFilter(): string {
@@ -33,8 +36,17 @@ export class ProductListComponent implements OnInit {
   constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
-    this.products = this.productService.getProducts();
-    this.filteredProducts = this.products;
+    this.sub = this.productService.getProducts().subscribe({
+      next: products => {
+        this.products = products;
+        this.filteredProducts = this.products;
+      },
+      error: err => this.errorMessage = err
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 
   public onRatingClick(message: string): void {
