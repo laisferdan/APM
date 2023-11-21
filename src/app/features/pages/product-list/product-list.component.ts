@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../../shared/shared.module';
 import { ProductService } from '../../../shared/services/product.service';
 import { Subscription } from 'rxjs';
+import { ProductDetailComponent } from '../product-detail/product-detail.component';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, SharedModule],
+  imports: [CommonModule, FormsModule, SharedModule, ProductDetailComponent],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })

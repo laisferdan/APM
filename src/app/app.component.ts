@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ProductListComponent } from './features/pages/product-list/product-list.component';
-import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from './shared/shared.module';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'app-root',
@@ -13,10 +11,10 @@ import { SharedModule } from './shared/shared.module';
     styleUrls: ['./app.component.css'],
     imports: [
       CommonModule, 
-      RouterModule, 
-      ProductListComponent, 
       FormsModule,
-      SharedModule
+      SharedModule,
+      RouterOutlet,
+      RouterLink
     ]
 })
 export class AppComponent {
