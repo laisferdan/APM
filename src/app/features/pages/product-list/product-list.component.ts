@@ -1,6 +1,6 @@
 import { IProduct } from './../../../core/models/product.interface';
 import { FormsModule } from '@angular/forms';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../../shared/shared.module';
 import { ProductService } from '../../../shared/services/product.service';
@@ -23,16 +23,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
   public errorMessage: string = '';
   public sub!: Subscription;
 
-  private _listFilter = '';
-  public get listFilter(): string {
-    return this._listFilter;
-  }
-  public set listFilter(value: string) {
-    this._listFilter = value;
-    this.filteredProducts = this.performFilter(value);
-  }
-
-  public filteredProducts: IProduct[] = [];
+  public listFilter = signal('');
+  public filteredProducts = computed(() => this.performFilter(this.listFilter()));
   public products: IProduct[] = [];
 
   constructor(private productService: ProductService) { }
@@ -41,7 +33,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.sub = this.productService.getProducts().subscribe({
       next: products => {
         this.products = products;
-        this.filteredProducts = this.products;
       },
       error: err => this.errorMessage = err
     });
@@ -51,13 +42,18 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
+  public onFilterChange(value: string) {
+    this.listFilter.set(value);
+  }
+
   public onRatingClick(message: string): void {
     this.pageTitle = 'Product list: ' + message;
   }
 
   public performFilter(filterBy: string): IProduct[] {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.products.filter((product: IProduct) => product.productName.toLocaleLowerCase().includes(filterBy));
+    return this.products.filter((product: IProduct) =>
+      product.productName.toLocaleLowerCase().includes(filterBy));
   }
 
   public toggleImage(): void {
